@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+  csv-converter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./csvconvdata:/app/db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 6037:6038
+  
+
   db:
     image: mysql:5.7
     container_name: db
@@ -10,9 +25,10 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     ports:
-      - "6035:3306"
+      - "6036:3306"  
     volumes:
       - ./dbdata:/var/lib/mysql
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: pma
@@ -25,5 +41,7 @@ services:
     restart: always
     ports:
       - 8085:80
+
 volumes:
   dbdata:
+  csvconvdata:
