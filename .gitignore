@@ -1,15 +1,1 @@
-db/dbdata/auto.cnf
-db/dbdata/ca-key.pem
-db/dbdata/ca.pem
-db/dbdata/client-cert.pem
-db/dbdata/client-key.pem
-db/dbdata/ib_buffer_pool
-db/dbdata/ib_logfile0
-db/dbdata/ib_logfile1
-db/dbdata/ibdata1
-db/dbdata/ibtmp1
-db/dbdata/mysql.sock
-db/dbdata/private_key.pem
-db/dbdata/public_key.pem
-db/dbdata/server-cert.pem
-db/dbdata/server-key.pem
+dbdata
