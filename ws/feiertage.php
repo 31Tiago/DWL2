@@ -1,3 +1,5 @@
+<?php>
+
 $aHolidayList = [
     '01.01.' => 'Neujahr',
     '06.01.' => 'Hl. drei Könige',
@@ -16,21 +18,16 @@ $aHolidayList = [
     '25.12.' => 'Christtag',
     '26.12.' => 'Stefanitag',
     '31.12.' => 'Silvester'
- ];
+];
 
 date_default_timezone_set('Europe/Berlin');
-$dtEaster = new DateTime();
-$year = $dtEaster->format('Y'); // aktuelles jahr
-$dtEaster = $dtEaster->setTimestamp( easter_date($year) ); // ostersonntag heuer 27.03.2016
-
-$format = 'd.m.Y';
+$dtEaster = (new DateTime())->setTimestamp(easter_date(date('Y')));
 
 foreach ($aHolidayList as $dateExpr => $desc) {
-    if ( strpos($dateExpr, 'E') === 0 ) {
-        $dateExpr = ltrim($dateExpr, 'E');
-        $dtCurr = clone $dtEaster;
-        echo $dtCurr->modify($dateExpr.' day')->format($format). " -- " . $desc . "<br>";
-    } else {
-        echo (new DateTime($dateExpr.$year))->format($format). " -- " . $desc . "<br>";
-    }
-} 
+    $dtCurr = strpos($dateExpr, 'E') === 0
+        ? (clone $dtEaster)->modify(ltrim($dateExpr, 'E').' day')
+        : new DateTime($dateExpr.date('Y'));
+
+    echo $dtCurr->format('d.m.Y') . " -- " . $desc . "<br>";
+}
+?>

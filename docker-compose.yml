@@ -23,13 +23,14 @@ services:
     restart: always
     ports:
       - 6037:6038
-    volumes:
+    volumes: 
       - ./Csvconverter/data:/app/data
       
   web:
     image: nginx
     volumes:
       - ./templates:/etc/nginx/templates
+
     ports:
       - "8080:80"
     environment:
