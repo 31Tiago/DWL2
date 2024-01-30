@@ -3,6 +3,35 @@ import pandas as pd
 from sqlalchemy import create_engine, Column, Integer, String, Date, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_email(subject, message):
+    sender_email = 'your_email@gmail.com'
+    recipient_email = 'recipient_email@example.com'
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 465
+    smtp_username = 'your_email@gmail.com'
+    smtp_password = 'your_email_password'
+
+    # E-Mail erstellen
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+    msg['Subject'] = subject
+
+    # Nachricht hinzufügen
+    msg.attach(MIMEText(message, 'plain'))
+
+    # Verbindung zum SMTP-Server herstellen
+    with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+        server.login(smtp_username, smtp_password)
+        server.sendmail(sender_email, [recipient_email], msg.as_string())
+
+# Beispielaufruf
+send_email('Test-E-Mail', 'Dies ist eine automatisch generierte Test-E-Mail.')
+
 
 # CSV-Datei einlesen
 csv_file = '/app/data/Personio_dwl-rheine_employees_2023-12-12.csv'
