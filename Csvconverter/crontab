@@ -1,0 +1,2 @@
+# crontab
+*/3 * * * * root /usr/local/bin/python /app/csv_to_db.py > /proc/1/fd/1 2>/proc/1/fd/2

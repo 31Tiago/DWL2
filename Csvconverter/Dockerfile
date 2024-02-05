@@ -2,12 +2,21 @@
 FROM python:3.8
 
 WORKDIR /app
-RUN pip install pandas sqlalchemy mysqlclient
 
+# Install required packages
+RUN apt-get update && apt-get -y install cron vim
+
+# Install Python dependencies
+RUN pip install pandas sqlalchemy mysqlclient python-dotenv
+
+COPY data/ /app/data/
 COPY csv_to_db.py /app/
-RUN mkdir /app/data  # Make sure this directory matches the one you are mounting
-
-# Verwenden Sie 'mysqlclient' anstelle von 'MySQLdb'
-RUN pip install pandas sqlalchemy mysqlclient
-
-CMD ["python", "csv_to_db.py"]
+COPY .env /app/ 
+COPY start.sh /app/start.sh
+# Create the cron directory
+RUN mkdir -p /etc/cron.d
+# Create the log directory and file
+RUN mkdir -p /var/log && touch /var/log/cron.log
+# Set permissions for the cron job
+RUN chmod 0644 /etc/cron.d
+CMD ["bash", "/app/start.sh"]

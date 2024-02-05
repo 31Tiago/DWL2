@@ -14,18 +14,18 @@ services:
     build:
       context: ./Csvconverter
       dockerfile: Dockerfile
-   
+    depends_on:
+      - db
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: app_db
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
-    restart: always
     ports:
       - 6037:6038
     volumes:
+      - ./Csvconverter/csv_to_db.py:/app/csv_to_db.py
       - ./Csvconverter/data:/app/data
-      
 
   web:
     build:
