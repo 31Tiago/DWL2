@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import pandas as pd
 from sqlalchemy import create_engine, Column, Integer, String, Date, text
 from sqlalchemy.orm import declarative_base, sessionmaker
-import os
 from dotenv import load_dotenv
 import pandas as pd
 from sqlalchemy import create_engine, Column, Integer, String, Date, text
@@ -13,6 +12,7 @@ import smtplib
 from email.mime.text import MIMEText
 import time
 
+time.sleep(5)
 # Load environment variables from .env file
 load_dotenv()
 
@@ -51,7 +51,7 @@ csv_file = '/app/data/Personio_dwl-rheine_employees_2023-12-12.csv'
 try:
     # Try reading the CSV file
    
-    df = pd.read_csv(csv_file, sep=';', quotechar='"', skiprows=1)
+    df = pd.read_csv(csv_file, sep=';', quotechar='"', skiprows=1 , na_filter=False)
     
 except Exception as e:
     # If an error occurs, send an email with the error report
@@ -93,19 +93,26 @@ session.execute(text('ALTER TABLE Mitarbeiterdaten AUTO_INCREMENT = 1'))
 
 # Iteriere durch das DataFrame und füge Daten in die Datenbank ein
 for index, row in df.iterrows():
-    Vorname = row.get('Vorname', '')
-    Nachname = row.get('Nachname', '')
+    Vorname = str(row.get('Vorname', '')).strip()
+    Nachname = str(row.get('Nachname', '')).strip()
     Anstelldatum_str = row.get('Anstelldatum', '')
     Anstelldatum = None
     Geburtstag_str = row.get('Geburtstag', '')
     Geburtstag = None
 
     try:
-        if Anstelldatum_str:
-            Anstelldatum = datetime.strptime(Anstelldatum_str, '%d.%m.%Y').date()
+        if not Vorname or not Nachname:  # Überprüfen Sie, ob Vorname oder Nachname leer sind
+            raise ValueError("Vorname oder Nachname ist leer")
 
-        if Geburtstag_str:
-            Geburtstag = datetime.strptime(Geburtstag_str, '%d.%m.%Y').date()
+        if not Anstelldatum_str:
+            raise ValueError("Anstelldatum ist leer")
+
+        Anstelldatum = datetime.strptime(Anstelldatum_str, '%d.%m.%Y').date()
+
+        if not Geburtstag_str:
+            raise ValueError("Geburtsdatum ist leer")
+
+        Geburtstag = datetime.strptime(Geburtstag_str, '%d.%m.%Y').date()
 
         employee = Employee(
             Vorname=Vorname,
@@ -119,6 +126,8 @@ for index, row in df.iterrows():
     except ValueError as e:
         error_message = f"Fehler beim Verarbeiten der Zeile {index + 2}: {e}"
         send_error_email(error_message)
+
+
 # Commit the changes to the database
 session.commit()
 session.close()
