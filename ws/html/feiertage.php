@@ -20,13 +20,11 @@ $aHolidayList = [
 ];
 
 date_default_timezone_set('Europe/Berlin');
-$dtEaster = (new DateTime())->setTimestamp(easter_date(date('Y')));
 
 foreach ($aHolidayList as $dateExpr => $desc) {
-    $dtCurr = strpos($dateExpr, 'E') === 0 ? $dtEaster->modify($dateExpr) : new DateTime($dateExpr . date('Y'));
-    if ($dtCurr->format('d.m.') === date('d.m.')) {
-        echo "<p>Heute ist $desc.</p>";
+    $dtCurr = strpos($dateExpr, 'E') === false ? new DateTime(date('Y') . '-' . $dateExpr) : (new DateTime())->modify($dateExpr);
+    if ($dtCurr->format('d.m.') == date('d.m.')) {
+        echo $dtCurr->format('d.m.Y') . " -- " . $desc . "<br>";
     }
 }
 ?>
-
