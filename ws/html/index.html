@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
             text-shadow: 0 1px 0 var(--color-heading-shadow),
                          0 2px 0 var(--color-heading-shadow),
                          0 3px 0 var(--color-heading-shadow),
@@ -35,11 +36,11 @@
 
         /* CSS-Stil für den oberen Teil der Seite */
         .teil-1 {
-            flex: 1; /* Der erste Teil nimmt so viel Platz wie möglich ein */
+            flex: 0; /* Der erste Teil nimmt so viel Platz wie möglich ein */
             background-color: white; /* Hintergrundfarbe für den ersten Teil */
             color: white; /* Textfarbe für den ersten Teil */
             text-align: center; /* Zentrierung des Textes */
-            padding: -5px; /* Innenabstand für den ersten Teil */
+            padding: -50px; /* Innenabstand für den ersten Teil */
         }
 
         /* CSS-Stil für den unteren Teil der Seite */
@@ -48,23 +49,11 @@
             background-color: #A5BCD4; /* Hintergrundfarbe für den zweiten Teil */
             color: white; /* Textfarbe für den zweiten Teil */
             text-align: center; /* Zentrierung des Textes */
-            padding: 50px; /* Innenabstand für den zweiten Teil */
+            padding: 100px; /* Innenabstand für den zweiten Teil */
         
             
 
-.einfliegen {
-  opacity: 0; /* Setze die Anfangsopazität auf 0, um das Element unsichtbar zu machen */
-  transform: translateY(-20px); /* Verschiebe das Element vertikal nach oben außerhalb des Sichtbereichs */
-  animation: einfliegenAnimation 1s forwards; /* Definiere die Animation und die Dauer */
-}
-
-@keyframes einfliegenAnimation {
-  to {
-    opacity: 1; /* Setze die Endopazität auf 1, um das Element sichtbar zu machen */
-    transform: translateY(0); /* Setze die Endposition auf die ursprüngliche vertikale Position */
-  }
-} 
-        }
+      }
     
  
     </style>
@@ -73,17 +62,31 @@
             <div class="teil-1">
                 <center>
                     <br>
-                    <img src="DWLLogo.png" width="" height="" ><br>
+                    <img src="background.png" width="400" height="" ><br>
                 </center>  
             </div>
         <hr>
             <!-- Unterer Teil der Seite -->
             <div class="teil-2">    
                 <h1> Herzlichen Glückwunsch zum Geburtstag ...🎉 </h1>    
+                
             </div>
 
-            <script>
-                var bla = 1
-            </script> 
+            
+            
+        
 </body>        
+
+
+
+
+
+
 </html>
+
+
+
+
+
+
+
