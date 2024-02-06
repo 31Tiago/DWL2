@@ -6,26 +6,17 @@ services:
     ports:
       - 9443:9443
     volumes:
-        - ptdata:/data
-        - /var/run/docker.sock:/var/run/docker.sock
+      - ptdata:/data
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
   csv-converter:
-    build:
-      context: ./Csvconverter
-      dockerfile: Dockerfile
+    image: csvconv:v0
     depends_on:
       - db
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: app_db
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
+    env_file: .env  # Hier fügen Sie die .env-Datei hinzu
     ports:
       - 6037:6038
-    volumes:
-      - ./Csvconverter/csv_to_db.py:/app/csv_to_db.py
-      - ./Csvconverter/data:/app/data
 
   web:
     build:
@@ -40,11 +31,7 @@ services:
   db:
     image: mysql:5.7
     container_name: db
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: app_db
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
+    env_file: .env  # Hier fügen Sie die .env-Datei hinzu
     ports:
       - "6036:3306"  
     volumes:
