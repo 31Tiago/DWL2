@@ -1,32 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
-<link rel="stylesheet" href="/css/style.css?v=1.1">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DWL</title>
-</head>
-<body>
-<header>
+    <title>Text auf Bild schreiben</title>
+    <title>Zwei Bilder übereinander</title>
+    <title>Text einfliegen lassen</title>
+
+    <style>
+        canvas {
+            position: fixed;
+            inset: 0;
+        }
+
+        :root {
+            --color-heading: #EE7C18;
+            --color-heading-shadow: #003C57;
+        }
+
+        .dark:root {
+            --color-heading: #A5BCD4;
+            --color-heading-shadow: #003C57;
+        }
+
+        .intro {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 40vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "DWL", "Gill Sans", sans-serif;
+            font-size: 2vw;
+            color: var(--color-heading);
+
+            text-shadow: 0 1px 0 var(--color-heading-shadow),
+                         0 2px 0 var(--color-heading-shadow),
+                         0 3px 0 var(--color-heading-shadow),
+                         0 4px 0 var(--color-heading-shadow),
+                         0 5px 0 var(--color-heading-shadow),
 
 
-</header>
+                         0 6px 0 var(--color-heading-shadow),
+                         0 7px 0 var(--color-heading-shadow),
+                         0 8px 0 var(--color-heading-shadow),
+                         0 0 5px rgba(10, 0, 0, .05),
+                         0 1px 3px rgba(10, 0, 0, .2),
+                         0 3px 5px rgba(10, 0, 0, .2),
+                         0 5px 10px rgba(10, 0, 0, .2),
+                         0 10px 10px rgba(10, 0, 0, .2),
+                         0 20px 20px rgba(10, 0, 0, .2);
+        }
 
-<main>
-    <p1> hallo</p1>
-    <?php
-    // Einbinden von externem PHP-Code
-    include('Feiertage.php');
-    ?>
+        body {
+            background-color: white;
+        }
+          body {
+            margin: 0; /* Rand auf null setzen, um die gesamte Breite und Höhe zu nutzen */
+            padding: 0; /* Innenabstand auf null setzen */
+            height: 100vh; /* 100% Höhe des Viewports */
+            display: flex; /* Flexbox verwenden, um die Teile zu positionieren */
+            flex-direction: column; /* In einer Spalte anordnen (vertikal) */
+        }
 
+        /* CSS-Stil für den oberen Teil der Seite */
+        .teil-1 {
+            flex: 1; /* Der erste Teil nimmt so viel Platz wie möglich ein */
+            background-color: white; /* Hintergrundfarbe für den ersten Teil */
+            color: white; /* Textfarbe für den ersten Teil */
+            text-align: center; /* Zentrierung des Textes */
+            padding: -5px; /* Innenabstand für den ersten Teil */
+        }
 
-</main>
+        /* CSS-Stil für den unteren Teil der Seite */
+        .teil-2 {
+            flex: 1; /* Der zweite Teil nimmt so viel Platz wie möglich ein */
+            background-color: #A5BCD4; /* Hintergrundfarbe für den zweiten Teil */
+            color: white; /* Textfarbe für den zweiten Teil */
+            text-align: center; /* Zentrierung des Textes */
+            padding: 50px; /* Innenabstand für den zweiten Teil */
+        
+            
+
+.einfliegen {
+  opacity: 0; /* Setze die Anfangsopazität auf 0, um das Element unsichtbar zu machen */
+  transform: translateY(-20px); /* Verschiebe das Element vertikal nach oben außerhalb des Sichtbereichs */
+  animation: einfliegenAnimation 1s forwards; /* Definiere die Animation und die Dauer */
+}
+
+@keyframes einfliegenAnimation {
+  to {
+    opacity: 1; /* Setze die Endopazität auf 1, um das Element sichtbar zu machen */
+    transform: translateY(0); /* Setze die Endposition auf die ursprüngliche vertikale Position */
+  }
+} 
+        }
     
+ 
+    </style>
+</head>
+<body>        
+            <div class="teil-1">
+                <center>
+                    <br>
+                    <img src="DWLLogo.png" width="" height="" ><br>
+                </center>  
+            </div>
+        <hr>
+            <!-- Unterer Teil der Seite -->
+            <div class="teil-2">    
+                <h1> Herzlichen Glückwunsch zum Geburtstag ...🎉 </h1>    
+            </div>
 
-</body>
+            <script>
+                var bla = 1
+            </script> 
+</body>        
 </html>
-
-</html>
-
-
-

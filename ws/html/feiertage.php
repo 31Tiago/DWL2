@@ -43,4 +43,5 @@ foreach ($aHolidayList as $dateExpr => $desc) {
     '31.12.' => 'Silvester'
     echo $dtCurr->format('d.m.Y') . " -- " . $desc . "<br>";
 }
+
 ?>
