@@ -10,7 +10,7 @@ RUN apt-get update && apt-get -y install cron vim
 RUN pip install pandas sqlalchemy mysqlclient python-dotenv
 
 COPY data/ /app/data/
-COPY csv_to_db.py /app/
+COPY csv_to_db.py /app/csv_to_db.py
 COPY .env /app/ 
 COPY start.sh /app/start.sh
 # Create the cron directory
