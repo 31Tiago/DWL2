@@ -9,7 +9,7 @@ services:
       - ptdata:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-
+   
   csv-converter:
     image: csvconv:v0
     depends_on:
@@ -17,25 +17,31 @@ services:
     env_file: .env  # Hier fügen Sie die .env-Datei hinzu
     ports:
       - 6037:6038
+   
 
-  web:
-    build:
-      context: ./ws
-      dockerfile: Dockerfile
+  nginx:
+    image: nginx:alpine
     ports:
       - "8080:80"
     volumes:
-      - ./ws/html:/usr/share/nginx/html
-      - ./ws/nginx.conf:/etc/nginx/nginx.conf
+      - ./ws/default.conf:/etc/nginx/conf.d/default.conf
+      - ./ws/website:/var/www/html
+  php:
+    build:
+      context: ./phpconf/
+      dockerfile: Dockerfile
+    volumes:
+    - ./ws/website:/var/www/html
 
   db:
     image: mysql:5.7
     container_name: db
-    env_file: .env  # Hier fügen Sie die .env-Datei hinzu
+    env_file: .env
     ports:
       - "6036:3306"  
     volumes:
       - ./dbdata:/var/lib/mysql
+  
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -49,6 +55,7 @@ services:
     restart: always
     ports:
       - 8085:80
+  
 
 volumes:
   dbdata:

@@ -1,0 +1,4 @@
+FROM php:7.4-fpm
+
+# Installieren von mysqli-Erweiterung
+RUN docker-php-ext-install mysqli
