@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geburtstagsliste</title>
+    <style>
+        /* CSS-Stil für den oberen Teil der Seite */
+        .teil-1 {
+            background-color: white; /* Hintergrundfarbe für den ersten Teil */
+            color: white; /* Textfarbe für den ersten Teil */
+            text-align: center; /* Zentrierung des Textes */
+            padding: 50px; /* Innenabstand für den ersten Teil */
+        }
+
+        /* CSS-Stil für den unteren Teil der Seite */
+        .teil-2 {
+            background-color: #A5BCD4; /* Hintergrundfarbe für den zweiten Teil */
+            color: white; /* Textfarbe für den zweiten Teil */
+            text-align: center; /* Zentrierung des Textes */
+            padding: 50px; /* Innenabstand für den zweiten Teil */
+        }
+    </style>
+</head>
+<body>
+    <!-- Oberer Teil der Seite -->
+    <div class="teil-1">
+        <center>
+            <img src="background.png" width="400" height="" alt="Hintergrundbild">
+        </center>
+    </div>
+    <hr>
+    <!-- Unterer Teil der Seite -->
+    <div class="teil-2">
+        <h1> Herzlichen Glückwunsch zum Geburtstag ...🎉 </h1>
+        <div id="mitarbeiterdaten"></div> <!-- Hier werden die Mitarbeiterdaten angezeigt -->
+    </div>
+
+    <script>
+        // JavaScript, um die Daten von der PHP-Datei abzurufen und anzuzeigen
+        window.onload = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "mitarbeiterdaten.php", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById("mitarbeiterdaten").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        };
+    </script>
+</body>
+</html>
