@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
+    
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geburtstagsliste</title>
@@ -22,7 +25,28 @@
         }
     </style>
 </head>
-<body>
+<script>
+    window.onload = function() {
+      // Get the screen width
+      const screenWidth = window.innerWidth;
+      
+      // Calculate the scaling factor (you can adjust the multiplier value to control the confetti size)
+      const scalingFactor = screenWidth * 0.0005;
+  
+      confetti({
+        particleCount: 200,
+        spread: 90,
+        angle: 90,
+        startVelocity: 50,
+        origin: {
+          x: 0.5,
+          y: 0.7
+        },
+        // Apply the scaling factor to the confetti sizes
+        particleSizes: [15 * scalingFactor, 20 * scalingFactor],
+      });
+    };
+  </script>
     <!-- Oberer Teil der Seite -->
     <div class="teil-1">
         <center>
@@ -32,22 +56,24 @@
     <hr>
     <!-- Unterer Teil der Seite -->
     <div class="teil-2">
-        <h1> Herzlichen Glückwunsch zum Geburtstag ...🎉 </h1>
+    
         <div id="mitarbeiterdaten"></div> <!-- Hier werden die Mitarbeiterdaten angezeigt -->
     </div>
 
     <script>
-        // JavaScript, um die Daten von der PHP-Datei abzurufen und anzuzeigen
-        window.onload = function() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "mitarbeiterdaten.php", true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    document.getElementById("mitarbeiterdaten").innerHTML = xhr.responseText;
-                }
-            };
-            xhr.send();
-        };
-    </script>
+  
+          // Your existing code for fetching and displaying data
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "mitarbeiterdaten.php", true);
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                  document.getElementById("mitarbeiterdaten").innerHTML = xhr.responseText;
+                  confetti.stop();
+              }
+          };
+          xhr.send();
+  
+          
+  </script>
 </body>
 </html>
