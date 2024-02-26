@@ -4,6 +4,7 @@ import pandas as pd
 from sqlalchemy import create_engine, Column, Integer, String, Date, ARRAY, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime, timedelta
+from dateutil.easter import easter
 import smtplib
 from email.mime.text import MIMEText
 import time
@@ -99,11 +100,37 @@ session.execute(text('ALTER TABLE Mitarbeiterdaten AUTO_INCREMENT = 1'))
 date_formats = ['%d.%m.%Y', '%d-%m-%Y', '%Y-%m-%d', '%Y.%m.%d']
 
 # Example for holidays
-feiertage = [
-    datetime(2024, 1, 1).date(),  # Neujahr
-    datetime(2024, 12, 25).date()  # Weihnachten
+def calculate_holidays():
+    # Aktuelles Jahr ermitteln
+    current_year = datetime.now().year
+    
+    # Berechnen von Ostern
+    easter_date = easter(current_year)
+    
+    # Ableitung anderer Feiertage
+    karfreitag = easter_date - timedelta(days=2)
+    ostermontag = easter_date + timedelta(days=1)
+    christi_himmelfahrt = easter_date + timedelta(days=39)
+    pfingstmontag = easter_date + timedelta(days=50)
+    fronleichnam = easter_date + timedelta(days=60)
 
-]
+    # Festlegung der Feiertage in NRW, an denen nicht gearbeitet wird
+    nrw_feiertage = [
+        datetime(current_year, 1, 1).date(),  # Neujahr
+        karfreitag,                    # Karfreitag
+        ostermontag,                   # Ostern - Ostermontag
+        datetime(current_year, 5, 1).date(),  # 1. Mai - Tag der Arbeit
+        christi_himmelfahrt,          # Christi Himmelfahrt
+        pfingstmontag,                # Pfingsten - Pfingstmontag
+        fronleichnam,                 # Fronleichnam
+        datetime(current_year, 10, 3).date(), # Tag der Deutschen Einheit
+        datetime(current_year, 12, 25).date(),# 1. Weihnachtsfeiertag
+        datetime(current_year, 12, 26).date() # 2. Weihnachtsfeiertag
+    ]
+
+    # Liste der Feiertage zurückgeben
+    return nrw_feiertage
+feiertage = calculate_holidays()
 
 def is_weekend(date):
     return date.weekday() >= 5
