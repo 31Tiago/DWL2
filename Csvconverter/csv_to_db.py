@@ -1,14 +1,13 @@
 import os
 from dotenv import load_dotenv
 import pandas as pd
-from sqlalchemy import create_engine, Column, Integer, String, Date, text
+from sqlalchemy import create_engine, Column, Integer, String, Date, ARRAY, text
 from sqlalchemy.orm import declarative_base, sessionmaker
-from datetime import datetime
+from datetime import datetime, timedelta
 import smtplib
 from email.mime.text import MIMEText
 import time
 import glob
-import re
 
 time.sleep(5)
 # Load environment variables from .env file
@@ -68,10 +67,12 @@ Base = declarative_base()
 class Employee(Base):
     __tablename__ = 'Mitarbeiterdaten'
     id = Column(Integer, primary_key=True)
-    Vorname = Column(String(255))  # Specify a length for VARCHAR
-    Nachname = Column(String(255))  # Specify a length for VARCHAR
+    Vorname = Column(String(255))
+    Nachname = Column(String(255))
     Anstelldatum = Column(Date)
     Geburtstag = Column(Date)
+    NextBirthdayWorkday = Column(Date)
+    NextHireDateWorkday = Column(Date)
 
 # MySQL database connection
 mysql_host = os.getenv('MYSQL_HOST')
@@ -96,6 +97,30 @@ session.execute(text('ALTER TABLE Mitarbeiterdaten AUTO_INCREMENT = 1'))
 
 # Regular expression to match various date formats
 date_formats = ['%d.%m.%Y', '%d-%m-%Y', '%Y-%m-%d', '%Y.%m.%d']
+
+# Example for holidays
+feiertage = [
+    datetime(2024, 1, 1).date(),  # Neujahr
+    datetime(2024, 12, 25).date()  # Weihnachten
+
+]
+
+def is_weekend(date):
+    return date.weekday() >= 5
+
+def next_workday(date, holidays):
+    current_year = datetime.now().year  # Aktuelles Jahr
+    current_date = datetime(current_year, date.month, date.day).date()  # Aktuelles Datum mit dem gleichen Tag und Monat, aber im aktuellen Jahr
+    if not is_weekend(current_date) and current_date not in holidays:
+        return current_date
+    
+    next_day = current_date + timedelta(days=1)
+    while True:
+        if not is_weekend(next_day) and next_day not in holidays:
+            return next_day
+        next_day += timedelta(days=1)
+
+
 
 
 # Iterate through the DataFrame and insert data into the database
@@ -139,11 +164,21 @@ for index, row in df.iterrows():
         if not Geburtstag:
             raise ValueError("Invalid Geburtsdatum format")
 
+        # Calculation of next workday for birthday and hire date
+        
+        next_birthday_workday = next_workday(Geburtstag, feiertage)
+        next_hiredate_workday = next_workday(Anstelldatum, feiertage)
+        
+
+        
+
         employee = Employee(
             Vorname=Vorname,
             Nachname=Nachname,
             Anstelldatum=Anstelldatum,
-            Geburtstag=Geburtstag
+            Geburtstag=Geburtstag,
+            NextBirthdayWorkday=next_birthday_workday,
+            NextHireDateWorkday=next_hiredate_workday
         )
         
         session.add(employee)
