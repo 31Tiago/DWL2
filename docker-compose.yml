@@ -14,7 +14,7 @@ services:
     image: csvconv:v0
     depends_on:
       - db
-    env_file: .env  # Hier fügen Sie die .env-Datei hinzu
+    env_file: .env  
     ports:
       - 6037:6038
    
