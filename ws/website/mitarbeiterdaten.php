@@ -24,7 +24,6 @@ if (!$result_birthday || !$result_start_today) {
     exit();
 }
 
-
 // Nachricht für Geburtstagswünsche
 $birthday_message = "";
 $font_style = "font-family: Arial, sans-serif;";
@@ -36,13 +35,13 @@ if(mysqli_num_rows($result_birthday) > 0) {
     while ($row = mysqli_fetch_assoc($result_birthday)) {
         // Überprüfen, ob der Geburtstag heute ist
         if ($row['GeburtstagFormatted'] == $today) {
-            $birthday_message .= "<p style='$font_style;font-size: 20px;'>🎉 Herzlichen Glückwunsch ".$row['Vorname']." ".$row['Nachname']."! 🎉</p>";
+            $birthday_message .= "<p style='$font_style;font-size: 24px;'>🎉 Herzlichen Glückwunsch ".$row['Vorname']." ".$row['Nachname']."! 🎉</p>";
         } else {
             // Geburtstag des Mitarbeiters (ohne Berücksichtigung des Jahres)
             $geburtstag = date_create_from_format('m-d', date('m-d', strtotime($row['Geburtstag'])));
             $heute = date_create_from_format('m-d', date('m-d'));
             $tage_seit_geburtstag = $heute->diff($geburtstag)->format('%a');
-            $birthday_message .= "<p style='$font_style;font-size: 20px;'>🎉 Herzlichen Glückwunsch nachträglich zu Ihrem Geburtstag, ".$row['Vorname']." ".$row['Nachname']." vor ".$tage_seit_geburtstag." Tagen! 🎉</p>";
+            $birthday_message .= "<p style='$font_style;font-size: 24px;'>🎉 Herzlichen Glückwunsch nachträglich zu Ihrem Geburtstag, ".$row['Vorname']." ".$row['Nachname']." vor ".$tage_seit_geburtstag." Tagen! 🎉</p>";
         }
     }
 }
@@ -58,19 +57,19 @@ if(mysqli_num_rows($result_start_today) > 0) {
             $anstelldatum = new DateTime($row['Anstelldatum']);
             $heute = new DateTime('now');
             $jahre = $heute->diff($anstelldatum)->y;
-            echo "<p style='$font_style;font-size: 18px;'>🎉 Herzlichen Glückwunsch zu Ihrem $jahre jährigen Betriebsjubiläum in unserem Unternehmen, ".$row['Vorname']." ".$row['Nachname']."! Danke für Ihre Arbeit seit dem: ".$anstelldatum->format('d.m.Y')."! 🎉</p>";
+            echo "<p style='$font_style;font-size: 24px;'>🎉 Herzlichen Glückwunsch zu Ihrem $jahre jährigen Betriebsjubiläum in unserem Unternehmen, ".$row['Vorname']." ".$row['Nachname']."! Danke für Ihre Arbeit seit dem: ".$anstelldatum->format('d.m.Y')."! 🎉</p>";
         } else {
             // Anstellungstag ist nicht heute
             $anstelldatum = new DateTime($row['Anstelldatum']);
             $heute = new DateTime('now');
             $jahre = $heute->diff($anstelldatum)->y;
-            echo "<p style='$font_style;font-size: 18px;'>🎉 Herzlichen Glückwunsch nachträglich zu Ihrem $jahre jährigen Betriebsjubiläum ".$row['Vorname']." ".$row['Nachname'].". Danke für Ihre langjährige Arbeit seit dem: ".$anstelldatum->format('d.m.Y')."! 🎉</p>";
+            echo "<p style='$font_style;font-size: 24px;'>🎉 Herzlichen Glückwunsch nachträglich zu Ihrem $jahre jährigen Betriebsjubiläum ".$row['Vorname']." ".$row['Nachname'].". Danke für Ihre langjährige Arbeit seit dem: ".$anstelldatum->format('d.m.Y')."! 🎉</p>";
         }
     }
 }
 
 // Ausgabe, falls heute weder Geburtstag noch Einstellungstag ist
 if (mysqli_num_rows($result_start_today) == 0 && empty($birthday_message)) {
-    echo "<p style='$font_style;font-size: 20px;'>Heute hat niemand Geburtstag und es wurden auch keine Mitarbeiter eingestellt.</p>";
+    echo "<p style='$font_style;font-size: 24px;'>Heute hat niemand Geburtstag und es wurden auch keine Mitarbeiter eingestellt.</p>";
 }
 ?>
