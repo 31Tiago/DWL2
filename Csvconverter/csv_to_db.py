@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 import time
 import glob
 
-time.sleep(5)
+time.sleep(10)
 # Load environment variables from .env file
 load_dotenv()
 
