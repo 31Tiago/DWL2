@@ -48,10 +48,8 @@ services:
     container_name: pma
     links:
       - db
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_ARBITRARY: 1
+    env_file:
+      - .env
     restart: always
     ports:
       - 8085:80
