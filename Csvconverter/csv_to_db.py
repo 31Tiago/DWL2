@@ -126,6 +126,9 @@ def calculate_holidays():
         datetime(current_year, 10, 3).date(), # Tag der Deutschen Einheit
         datetime(current_year, 12, 25).date(),# 1. Weihnachtsfeiertag
         datetime(current_year, 12, 26).date() # 2. Weihnachtsfeiertag
+
+
+        #datetime(current_year, ?, ?).date() # selbst Feiertag einstellen
     ]
 
     # Liste der Feiertage zurückgeben
