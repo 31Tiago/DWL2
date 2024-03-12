@@ -11,7 +11,9 @@ services:
     restart: unless-stopped
    
   csv-converter:
-    image: csvconv:v0
+    build:
+      context: ./Csvconverter/
+      dockerfile: Dockerfile     
     depends_on:
       - db
     env_file: .env  
