@@ -10,57 +10,59 @@ from email.mime.text import MIMEText
 import time
 import glob
 
+# Warte 10 Sekunden
 time.sleep(10)
-# Load environment variables from .env file
+
+# Lade Umgebungsvariablen aus der .env-Datei
 load_dotenv()
 
-# Function to send an email with an error report
+# Funktion zum Senden einer E-Mail mit einem Fehlerbericht
 def send_error_email(error_message):
-    # Gmail account credentials
+    # Gmail-Kontozugangsdaten
     gmail_user = os.getenv('GMAIL_USER')
     gmail_password = os.getenv('GMAIL_PASSWORD')
-    # Recipient email address
+    # Empfänger-E-Mail-Adresse
     to_email = os.getenv('TO_EMAIL')
 
-    # Setup the MIME
+    # Einrichten des MIME
     message = MIMEText(error_message)
-    message['Subject'] = 'Error in CSV Converter Script'
+    message['Subject'] = 'Fehler im CSV-Konvertierungsskript'
     message['From'] = gmail_user
     message['To'] = to_email
     
-    # Connect to the Gmail server
+    # Verbindung zum Gmail-Server herstellen
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
 
-    # Login to the Gmail account
+    # Anmeldung am Gmail-Konto
     server.login(gmail_user, gmail_password)
 
-    # Send the email
+    # E-Mail senden
     server.sendmail(gmail_user, to_email, message.as_string())
 
-    # Quit the server
+    # Server beenden
     server.quit()
 
-# Function to get the latest CSV file in the directory
+# Funktion, um die neueste CSV-Datei im Verzeichnis zu erhalten
 def get_latest_csv(directory):
     list_of_files = glob.glob(os.path.join(directory, '*.csv'))
     latest_file = max(list_of_files, key=os.path.getctime)
     return latest_file
 
-# Directory where the CSV files are stored
+# Verzeichnis, in dem die CSV-Dateien gespeichert sind
 csv_directory = '/app/data'
 
-# Get the latest CSV file
+# Die neueste CSV-Datei abrufen
 csv_file = get_latest_csv(csv_directory)
 
-# CSV file reading
+# CSV-Datei lesen
 try:
     df = pd.read_csv(csv_file, sep=';', quotechar='"', skiprows=1 , na_filter=False)
 except Exception as e:
-    # If an error occurs, send an email with the error report
-    error_message = f"Error reading CSV file:\n{str(e)}"
+    # Wenn ein Fehler auftritt, sende eine E-Mail mit dem Fehlerbericht
+    error_message = f"Fehler beim Lesen der CSV-Datei:\n{str(e)}"
     send_error_email(error_message)
-    # Exit the script or handle the error as needed
+    # Skript beenden oder Fehler entsprechend behandeln
     exit()
 
 Base = declarative_base()
@@ -75,31 +77,31 @@ class Employee(Base):
     NextBirthdayWorkday = Column(Date)
     NextHireDateWorkday = Column(Date)
 
-# MySQL database connection
+# MySQL-Datenbankverbindung
 mysql_host = os.getenv('MYSQL_HOST')
 mysql_port = os.getenv('MYSQL_PORT')
 mysql_db = os.getenv('MYSQL_DATABASE')
 mysql_user = os.getenv('MYSQL_USER')
 mysql_password = os.getenv('MYSQL_PASSWORD')
 
-# Create the SQLAlchemy engine
+# SQLAlchemy-Engine erstellen
 engine = create_engine(f'mysql+mysqldb://{mysql_user}:{mysql_password}@{mysql_host}:{mysql_port}/{mysql_db}')
 Base.metadata.create_all(engine)
 
-# Create the session
+# Sitzung erstellen
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Delete all existing records in the table
+# Alle vorhandenen Datensätze in der Tabelle löschen
 session.query(Employee).delete()
 
-# Reset the Auto-Increment value to 1
+# Setzen des Auto-Increment-Werts auf 1 zurück
 session.execute(text('ALTER TABLE Mitarbeiterdaten AUTO_INCREMENT = 1'))
 
-# Regular expression to match various date formats
+# Regulärer Ausdruck zum Abgleichen verschiedener Datumsformate
 date_formats = ['%d.%m.%Y', '%d-%m-%Y', '%Y-%m-%d', '%Y.%m.%d']
 
-# Example for holidays
+# Beispiel für Feiertage
 def calculate_holidays():
     # Aktuelles Jahr ermitteln
     current_year = datetime.now().year
@@ -150,10 +152,7 @@ def next_workday(date, holidays):
             return next_day
         next_day += timedelta(days=1)
 
-
-
-
-# Iterate through the DataFrame and insert data into the database
+# Iteriere durch das DataFrame und füge Daten in die Datenbank ein
 for index, row in df.iterrows():
     Vorname = str(row.get('Vorname', '')).strip()
     Nachname = str(row.get('Nachname', '')).strip()
@@ -163,45 +162,43 @@ for index, row in df.iterrows():
     Geburtstag = None
 
     try:
-        if not Vorname or not Nachname:  # Check if Vorname or Nachname is empty
-            raise ValueError("Vorname or Nachname is empty")
+        if not Vorname or not Nachname:  # Überprüfe, ob Vorname oder Nachname leer sind
+            raise ValueError("Vorname oder Nachname ist leer")
 
         if not Anstelldatum_str:
-            raise ValueError("Anstelldatum is empty")
+            raise ValueError("Anstelldatum ist leer")
 
-        # Try to parse Anstelldatum with different date formats
+        # Versuche, Anstelldatum mit verschiedenen Datumsformaten zu parsen
         for date_format in date_formats:
             try:
                 Anstelldatum = datetime.strptime(Anstelldatum_str, date_format).date()
-                break  # Stop trying once a valid date format is found
+                break  # Sobald ein gültiges Datumsformat gefunden ist, aufhören zu versuchen
             except ValueError:
-                continue  # Try the next date format
+                continue  # Das nächste Datumsformat versuchen
 
         if not Anstelldatum:
-            raise ValueError("Invalid Anstelldatum format")
+            raise ValueError("Ungültiges Anstelldatum-Format")
 
         if not Geburtstag_str:
-            raise ValueError("Geburtsdatum is empty")
+            raise ValueError("Geburtsdatum ist leer")
 
-        # Try to parse Geburtstag with different date formats
+        # Versuche, Geburtstag mit verschiedenen Datumsformaten zu parsen
         for date_format in date_formats:
             try:
                 Geburtstag = datetime.strptime(Geburtstag_str, date_format).date()
-                break  # Stop trying once a valid date format is found
+                break  # Sobald ein gültiges Datumsformat gefunden ist, aufhören zu versuchen
             except ValueError:
-                continue  # Try the next date format
+                continue  # Das nächste Datumsformat versuchen
 
         if not Geburtstag:
-            raise ValueError("Invalid Geburtsdatum format")
+            raise ValueError("Ungültiges Geburtsdatum-Format")
 
-        # Calculation of next workday for birthday and hire date
+        # Berechnung des nächsten Arbeitstags für Geburtstag und Anstellungsdatum
         
         next_birthday_workday = next_workday(Geburtstag, feiertage)
         next_hiredate_workday = next_workday(Anstelldatum, feiertage)
         
-
-        
-
+        # Mitarbeiterobjekt erstellen und hinzufügen
         employee = Employee(
             Vorname=Vorname,
             Nachname=Nachname,
@@ -214,9 +211,9 @@ for index, row in df.iterrows():
         session.add(employee)
 
     except ValueError as e:
-        error_message = f"Error processing line {index + 2}: {e}"
+        error_message = f"Fehler beim Verarbeiten von Zeile {index + 2}: {e}"
         send_error_email(error_message)
 
-# Commit the changes to the database
+# Änderungen an der Datenbank bestätigen
 session.commit()
 session.close()

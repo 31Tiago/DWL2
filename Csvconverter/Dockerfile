@@ -3,20 +3,19 @@ FROM python:3.8
 
 WORKDIR /app
 
-# Install required packages
+# Erforderliche Pakete installieren
 RUN apt-get update && apt-get -y install cron vim
 
-# Install Python dependencies
+# Python-Abhängigkeiten installieren
 RUN pip install pandas sqlalchemy mysqlclient python-dotenv
 
 COPY data/ /app/data/
 COPY csv_to_db.py /app/csv_to_db.py
 COPY .env /app/ 
 COPY start.sh /app/start.sh
-# Create the cron directory
+# Das Cron-Verzeichnis erstellen
 RUN mkdir -p /etc/cron.d
-# Create the log directory and file
 
-# Set permissions for the cron job
+# Berechtigungen für den Cron-Job festlegen
 RUN chmod 0644 /etc/cron.d
 CMD ["bash", "/app/start.sh"]
